@@ -81,6 +81,8 @@ which gives all the information about the operating system
 *  `head -n [number of lines to print] [filename]` - just print the first n lines of a file
 * `history` - list the history of commands in to the terminal
 * `whoami` - outputs username
+* `curl [IP address]` - send a HTTP request
+* `shuf -n [number of lines to output]` - shuffle and return a sample f n lines of a file
 #### Shell piping
 Essentially this is about input, some processing and then output.
 A standard piping line of code might look something like this:
@@ -125,9 +127,23 @@ SSH enables you to shell into a server to run commands or even remotely run comm
  ```bash
   ssh -v username@[IP address of host]
  ```
+* port forwarding - you can forward a port from a remote server to a local port using:
+```bash
+ ssh -N -L 8080:[local.machine.ip.address]:8080 [user@ip.address.of.host]
+```
+This enables you to communicate with that server via a web browser.
 #### Useful tools
 * `htop` - advanced and pretty version of `top`
 * `oh-my-zsh` - posh terminal
-#### Useful notes
+### Configuring the shell environment
+#### Shell config files
+Shell config files are a form of automation and may contain:
+* alias - shortcuts for lines of code
+* source - the bashrc file may source other custom command files
+* functions - bash custom functions
+* file system mounts
+#### bashrc
+#### Configuring third party tools
+### Useful notes
 * In vim, you can use the command `:set paste` to paste from your clipboard
 * In vim, `:wq` writes and then quits
