@@ -83,6 +83,8 @@ which gives all the information about the operating system
 * `whoami` - outputs username
 * `curl [IP address]` - send a HTTP request
 * `shuf -n [number of lines to output]` - shuffle and return a sample f n lines of a file
+* `echo $SHELL` - prints the location of the executable for the shell that you're using so you can find out what shell you're on
+* `alias` - lists all alias code
 #### Shell piping
 Essentially this is about input, some processing and then output.
 A standard piping line of code might look something like this:
@@ -143,7 +145,40 @@ Shell config files are a form of automation and may contain:
 * functions - bash custom functions
 * file system mounts
 #### bashrc
+Examples:
+* Add API keys into `.bashrc` and `export` them to add to global variables
+ ```bash
+  export pathToAPIKeys="/path/to/api/keys/apiKeys.sh"
+  # where apiKeys.sh looks something like this:
+  # export SECRET_ONE = 123
+  # export SECRET_TWO = 456
+  source $pathToAPIKeys
+ ```
+* Spin up a global python virtual environment
+ ```bash
+  source ~/.venv/bin/activate
+ ```
+* Set the context for project work automatically:
+ ```bash
+  alias switchToProject="cd /project/directory && source /project/directors/environmentFile.sh"
+ ```
 #### Configuring third party tools
+With oh-my-zsh you can edit the `~/.zshrc` tp customise the shell. To apply changes just type:
+ ```bash
+  source ~/.zshrc
+ ```
+* You can edit the plugin line to add more customisation
+#### Shell variables
+Shell variables are a way of storing data that you can use later in scripts. A `.env` file is a good example - this will be ignored by git but will have all the variables you need for your work.
+Create a shell variable with:
+```bash
+ export FOOD="apple"
+ # Use like echo "I love" $FOOD
+```
+Shell variables autocomplete by pressing `TAB`.
+Variables will still exist in child shells. However if the `export` command is not used eg. `VAR=1` then the variable will not persist to child shells.
+Using `source` means you can go into a script and add environment variables to the parent environment.
+`script` however has no access to the parent environment and can only access variables in the child shell. Variables exported when running a script are not accessible in the parent shell.
 ### Useful notes
 * In vim, you can use the command `:set paste` to paste from your clipboard
 * In vim, `:wq` writes and then quits
