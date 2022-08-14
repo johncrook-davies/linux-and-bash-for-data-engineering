@@ -85,6 +85,8 @@ which gives all the information about the operating system
 * `shuf -n [number of lines to output]` - shuffle and return a sample f n lines of a file
 * `echo $SHELL` - prints the location of the executable for the shell that you're using so you can find out what shell you're on
 * `alias` - lists all alias code
+* `readlink -f [filename]` - returns full filepath of file
+* `tr [thing to use as replacement] [thing to replace] [input]` - find instances of the thing to replace and replace them with the replacement
 #### Shell piping
 Essentially this is about input, some processing and then output.
 A standard piping line of code might look something like this:
@@ -99,6 +101,14 @@ A standard piping line of code might look something like this:
 * Sort
 ```bash
  cat intothisfile.txt | sort
+```
+* Count number of unique occurrences of each thing
+```bash
+ echo -e "A\nB\nC\nA" | sort | uniq -c
+```
+* Reverse an input
+```bash
+ echo 1993 | rev
 ```
 * Search
 ```bash
@@ -179,6 +189,28 @@ Shell variables autocomplete by pressing `TAB`.
 Variables will still exist in child shells. However if the `export` command is not used eg. `VAR=1` then the variable will not persist to child shells.
 Using `source` means you can go into a script and add environment variables to the parent environment.
 `script` however has no access to the parent environment and can only access variables in the child shell. Variables exported when running a script are not accessible in the parent shell.
+#### Standard streams - Standard In, Standard Out and Standard Error
+A way of capturing data into an input and filtering it.
+##### Standard out
+Standard out is the piping described abover in the 'Shell piping' section.
+##### Standard in
+* Ask for user input
+```bash
+ read -p "Input for variable VARI" VARI
+```
+* Feed files straight into commands
+```bash
+ less < [filename]
+```
+##### Standard error
+* Write error to a file
+```bash
+ ls -l /wrong/path >> error.txt
+```
+*  Throw away error
+```bash
+ ls -l /wrong/path >> /dev/null
+```
 ### Useful notes
 * In vim, you can use the command `:set paste` to paste from your clipboard
 * In vim, `:wq` writes and then quits
