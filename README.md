@@ -1,7 +1,7 @@
 # Linux and Bash for data engineering - notes
 ## Bash scripts
 ### Core concepts
-* `shebang` line - tels script what language to use to execute the script eg. invoke bash or invoke python
+* `shebang` line - tels script what language to use to execute the script eg. invoke bash or invoke python eg `#!/bin/bash` or `#!/usr/bin/env bash`
 * `chmod` - makes script executable, it changes characteristics of the script to give it an executable flag
 * config files and variables
   - `.bashrc` - configure so that every new invokation of a terminal will run what is inside the bashrc - this enables building of alias' that automate tasks
@@ -76,6 +76,9 @@ which gives all the information about the operating system
 * `mv [current location] [desired destination]` - can move and rename files
 * `mkdir -p [long file path]` - creates multiple files
 * `grep [pattern being searched for] [thing to be searched]` - search thing for certain pattern
+* `grep -v [pattern not being searched for] [thing to be searched]` - search thing for everything other than certain pattern
+* `grep -c [pattern being searched for] [thing to be searched]` - count occurences of certain pattern
+* `grep -e [first pattern being searched for] -e [second pattern being searched for] [thing to be searched]` - search thing for multiple patterns
 *  `tail -f [filename]` - keep a file open and print it to the terminal - every time the file changes then change the terminal
 *  `tail -n [number of lines to print] [filename]` - just print the last n lines of a file
 *  `head -n [number of lines to print] [filename]` - just print the first n lines of a file
@@ -87,6 +90,11 @@ which gives all the information about the operating system
 * `alias` - lists all alias code
 * `readlink -f [filename]` - returns full filepath of file
 * `tr [thing to use as replacement] [thing to replace] [input]` - find instances of the thing to replace and replace them with the replacement
+* `echo $RANDOM` - outputs a random number
+* `find . -name "*.sh"` - find all files in current directory with shell extension
+* `find . -perm /+x` - find all executable files in current directory
+* `find . ! -name '.*' -type f` - find everything in current directory that isn't hidden and is a file
+* `find . -not -path '*/\.*'` - find everything in current directory that isn't in a hidden directory
 #### Shell piping
 Essentially this is about input, some processing and then output.
 A standard piping line of code might look something like this:
@@ -211,6 +219,111 @@ Standard out is the piping described abover in the 'Shell piping' section.
 ```bash
  ls -l /wrong/path >> /dev/null
 ```
+### Bash scripts
+#### Anatomy
+* Set strict mode (shell will exit when a command fails)
+ ```bash
+  set -e
+ ```
+* Enable printing of shell input lines as they are read
+```bash
+ set -v
+```
+* Enable printing of command traces before executing the command
+```bash
+ set -x
+```
+* Enable verbose debugging mode in shebang
+```bash
+ #!/usr.bin.bash -xv
+```
+#### Logic and control flow
+* If else statements
+```bash
+ if ["$VARI" = "thing"]; then
+  echo "we did something"
+ elif ["$VARI" = "another thing"]; then
+  echo "we did something else"
+ else
+  echo "do the default thing"
+ fi
+```
+* For loops
+```bash
+ for i in "${array[@]}"
+ do
+  echo "this is a ${i}"
+ done
+```
+```bash
+ for thing in first second last;
+ do echo "this is the $thing thing":
+ done
+```
+* While loops
+```bash
+COUNT=1
+ while [ $COUNT -le 10 ]
+ do
+  echo "outputting the number ${i}"
+  ((COUNT++))
+ done
+```
+* Logical operators
+ - and - `&&` run both commands only if first works eg. `false && echo "this never runs"`
+ - or - `||` run second command only if first fails eg. `false && echo "this always runs"`
+#### Shell techniques for data
+* Truncate - `head` or `tail`
+* Filter - `grep` or `cut`
+* Search - `find` or `locate`
+#### Bash functions
+There is no return in bash functions but you can echo the result and capture the echo.
+```bash
+ function_name() {
+  #...commands refering to variables like $1 $2 $3
+ }
+ # call this function with function_name param1 param2
+```
+For example:
+```bash
+ add() {
+  num1=$1
+  num2=$2
+  result=$((num1 +num2))
+  echo $result
+ }
+ # add 3 4 returns 7
+```
+#### Command line tools
+Calling a command line script looks like this:
+```bash
+ ./command-line-tool.sh --var1 1 --var2 "var2"
+```
+`var1` is referred to by the bash function in the shell script as `$1` and similarly `var2 is referred to by `$2`
+#### Makefiles
+Makefiles can contain multiple blocks of code than can be run independently eg.
+```make
+first:
+ echo "This is the first thing"
+second:
+ echo "This is the second thing"
+all: -first -second
+
+# run with make first or make second or make
+```
+#### Data structures
+* arrays -
+ ```bash
+  declare -a array=(1 2 3 4 5)
+ ```
+* hashes -
+ ```bash
+  declare -A hash=([one]="red" [two]="blue")
+  # This can be used like
+  for key in "${!hash[@]}"; do
+   echo "$key is ${hash[$key]}"
+  done
+ ```
 ### Useful notes
 * In vim, you can use the command `:set paste` to paste from your clipboard
 * In vim, `:wq` writes and then quits
